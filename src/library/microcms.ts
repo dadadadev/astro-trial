@@ -47,15 +47,16 @@ export type FeaturesResponse = {
   contents: Feature[];
 };
 
-export const getFeatures = async (queries?: MicroCMSQueries) => {
-  return await client.get<FeaturesResponse>({ endpoint: "features", queries });
+export const getFeatures = async (queries?: MicroCMSQueries, lang?: string) => {
+  return await client.get<FeaturesResponse>({ endpoint: `features-${lang ?? 'ja'}`, queries });
 };
 export const getFeatureDetail = async (
   contentId: string,
-  queries?: MicroCMSQueries
+  queries?: MicroCMSQueries,
+  lang?: string
 ) => {
   return await client.getListDetail<Feature>({
-    endpoint: "features",
+    endpoint: `features-${lang ?? 'ja'}`,
     contentId,
     queries,
   });

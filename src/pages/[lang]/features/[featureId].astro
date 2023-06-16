@@ -1,0 +1,119 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import { getFeatures, getFeatureDetail, Feature } from "../../../library/microcms";
+
+export const getStaticPaths = async() => {
+  const response = await getFeatures({ fields: ["id"] });
+  return response.contents.map((fearure: Feature) => {
+    return [{
+      params: {
+        lang: 'ja',
+        featureId: fearure.id,
+      }
+    },{
+      params: {
+        lang: 'en',
+        featureId: fearure.id,
+      }
+    }];
+  });
+}
+
+const { lang:_lang, featureId } = Astro.params;
+const lang: string = _lang ?? 'ja'
+const {
+    title,
+    constraint,
+    "input-fields": inputFields,
+    others,
+    publishedAt
+} = await getFeatureDetail(featureId as string, {}, lang);
+
+const texts = {
+  ja:{
+    publishedAt: '公開日時',
+    constraint: '制約',
+    inputFields: '入力項目',
+    inputFieldTitle:'項目名',
+    inputFieldRequired:'必須',
+    inputFieldDefault:'デフォルト値',
+    inputFieldDesc:'内容',
+  },
+  en:{
+    publishedAt: 'Published at',
+    constraint: 'Constraint',
+    inputFields: 'Input fields',
+    inputFieldTitle:'Title',
+    inputFieldRequired:'Required',
+    inputFieldDefault:'Default value',
+    inputFieldDesc:'Description',
+  }
+}
+// @ts-ignore
+const currentLangTexts = texts[lang]; 
+---
+
+<Layout title="My first blog with Astro">
+  <main>
+    <h1 class="title">{title}</h1>
+    <p class="publishedAt">{currentLangTexts.publishedAt}: {publishedAt}</p>
+    
+    <h2>{currentLangTexts.constraint}</h2>
+    {constraint.map(c => (
+      <div>
+        <h3>{c["note-title"]}</h3>
+        <div>{c["note-item"].map(note=> (
+          <div>{note["generic-list-item"]}</div>
+        ))}</div>
+      </div>
+    ))}
+
+  <h2>{currentLangTexts.inputFields}</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>{currentLangTexts.inputFieldTitle}</th>
+          <th>{currentLangTexts.inputFieldRequired}</th>
+          <th>{currentLangTexts.inputFieldDefault}</th>
+          <th>{currentLangTexts.inputFieldDesc}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {inputFields.map(field => (
+          <tr>
+            <td>{field["input-field-title"]}</td>
+            <td>{field["input-field-required"] ? '✓' : '-'}</td>
+            <td>{field["input-field-default"]}</td>
+            <td>{field["input-field-desc"]}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+    {others.map(other => (
+      <h2>{other["definition-title"]}</h2>
+      <p>{other["definition-value"]}</p>
+      <>{other["definition-images"].map(({url,width,height}) => (
+        <img src={url} alt="" width={width} height={height}>
+      ))}</>
+    ))}    
+  </main>
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1em;
+    max-width: 60ch;
+  }
+  th,td {
+    border: solid 1px;
+  }
+  table {
+    border-collapse:  collapse;
+  }
+  th {
+    width:  300px;
+    height: 80px;
+  }
+</style>

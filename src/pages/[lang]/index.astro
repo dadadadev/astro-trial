@@ -1,0 +1,34 @@
+---
+import Layout from "../../layouts/Layout.astro";
+
+import { Feature, getFeatures } from "../../library/microcms";
+import { getLangParams } from "../../utils";
+export const getStaticPaths = () => {
+  const langParams = getLangParams();
+  return [...langParams];
+}
+const { lang } = Astro.params;
+const response = await getFeatures({ fields: ["id", "title"] }, lang);
+
+---
+<Layout title="sample docs">
+  <main>
+    <ul>
+      {
+        response.contents.map((feature: Feature) => (
+          <li>
+            <a href={`/${lang}/features/${feature.id}`}>{feature.title}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1em;
+    max-width: 60ch;
+  }
+</style>
