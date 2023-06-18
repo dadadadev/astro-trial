@@ -2,22 +2,23 @@
 import Layout from "../../../layouts/Layout.astro";
 import { getFeatures, getFeatureDetail, Feature } from "../../../library/microcms";
 
-export const getStaticPaths = async() => {
-  const response = await getFeatures({ fields: ["id"] });
-  return response.contents.map((fearure: Feature) => {
-    return [{
-      params: {
-        lang: 'ja',
-        featureId: fearure.id,
-      }
-    },{
-      params: {
-        lang: 'en',
-        featureId: fearure.id,
-      }
-    }];
-  });
-}
+// not used in SSR
+// export const getStaticPaths = async() => {
+//   const response = await getFeatures({ fields: ["id"] });
+//   return response.contents.map((fearure: Feature) => {
+//     return [{
+//       params: {
+//         lang: 'ja',
+//         featureId: fearure.id,
+//       }
+//     },{
+//       params: {
+//         lang: 'en',
+//         featureId: fearure.id,
+//       }
+//     }];
+//   });
+// }
 
 const { lang:_lang, featureId } = Astro.params;
 const lang: string = _lang ?? 'ja'
