@@ -22,13 +22,30 @@ import { getFeatures, getFeatureDetail, Feature } from "../../../library/microcm
 
 const { lang:_lang, featureId } = Astro.params;
 const lang: string = _lang ?? 'ja'
+// const {
+//     title,
+//     constraint,
+//     "input-fields": inputFields,
+//     others,
+//     publishedAt
+// } = await getFeatureDetail(featureId as string, {}, lang);
+
+const result = await getFeatureDetail(featureId as string, {}, lang)
+  .catch(() => {
+    return false
+  });
+
+if (result === false) {
+  return Astro.redirect('/404')
+}
+
 const {
     title,
     constraint,
     "input-fields": inputFields,
     others,
     publishedAt
-} = await getFeatureDetail(featureId as string, {}, lang);
+} = result;
 
 const texts = {
   ja:{
