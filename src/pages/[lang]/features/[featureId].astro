@@ -72,7 +72,7 @@ const currentLangTexts = texts[lang];
   <h2>{currentLangTexts.inputFields}</h2>
     <table>
       <thead>
-        <tr>
+        <tr class="bg-gray-200">
           <th>{currentLangTexts.inputFieldTitle}</th>
           <th>{currentLangTexts.inputFieldRequired}</th>
           <th>{currentLangTexts.inputFieldDefault}</th>
@@ -82,7 +82,7 @@ const currentLangTexts = texts[lang];
       <tbody>
         {inputFields.map(field => (
           <tr>
-            <td>{field["input-field-title"]}</td>
+            <td class="font-bold">{field["input-field-title"]}</td>
             <td>{field["input-field-required"] ? '✓' : '-'}</td>
             <td>{field["input-field-default"]}</td>
             <td>{field["input-field-desc"]}</td>
@@ -102,19 +102,10 @@ const currentLangTexts = texts[lang];
 </Layout>
 
 <style>
-  main {
-    margin: auto;
-    padding: 1em;
-    max-width: 60ch;
-  }
   th,td {
     border: solid 1px;
   }
   table {
     border-collapse:  collapse;
   }
-  th {
-    width:  300px;
-    height: 80px;
-  }
-</style>
+  </style>
